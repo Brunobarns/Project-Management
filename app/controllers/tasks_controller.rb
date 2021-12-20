@@ -24,7 +24,7 @@ class TasksController < ApplicationController
     @task = @project.tasks.build(task_params)
 
     if @task.save
-      redirect_to([@task.project, @task], notice: 'Task was successfully created.')
+      redirect_to(@task.project)
     else
       render action: 'new'
     end
@@ -32,8 +32,8 @@ class TasksController < ApplicationController
 
   # PUT projects/1/tasks/1
   def update
-    if @task.update_attributes(task_params)
-      redirect_to([@task.project, @task], notice: 'Task was successfully updated.')
+    if @task.update(task_params)
+      redirect_to(@task.project)
     else
       render action: 'edit'
     end
@@ -43,14 +43,14 @@ class TasksController < ApplicationController
   def destroy
     @task.destroy
 
-    redirect_to project_tasks_url(@project)
+    redirect_to @project
   end
 
   private
 
   # Use callbacks to share common setup or constraints between actions.
   def set_project
-    @project = Project.find(params[:project_id])
+    @project = current_user.projects.find(params[:project_id])
   end
 
   def set_task
